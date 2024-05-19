@@ -57,7 +57,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
     monologuePrompt: string;
 
     formatPrompt(): string {
-        return `[These were {{char}}'s internal thoughts prior to {{user}}'s input: ${this.currentMonologue}\nSilently consider {{char}}'s thoughts when depicting their actions or dialog.]`
+        return this.currentMonologue ? `[These were {{char}}'s internal thoughts prior to {{user}}'s input: ${this.currentMonologue}\nSilently consider {{char}}'s thoughts when depicting their actions or dialog.]` : '';
     }
 
     constructor(data: InitialData<InitStateType, ChatStateType, MessageStateType, ConfigType>) {
@@ -81,7 +81,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         this.myInternalState = {};
         this.myInternalState['messageState'] = messageState ?? '';
         this.currentMonologue = '';
-        this.monologuePrompt = '[Rather than continue the scene, use this response to transcribe a couple sentences of {{char}}\'s internal monologue about their current situation, based on personality and ongoing events.]';
+        this.monologuePrompt = '[Rather than continue the scene, use this response to transcribe a couple brief sentences of {{char}}\'s stream of consciousness thoughts regarding other characters and ongoing events, based on personality and motives.]';
     }
 
     async load(): Promise<Partial<LoadResponse<InitStateType, ChatStateType, MessageStateType>>> {
