@@ -234,11 +234,19 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             display: 'grid',
             alignItems: 'stretch'
         }}>
+            <h1>Characters</h1>
+            <ul>
+                {Object.entries(this.characters).map(([key, value]) => (
+                    <li key={key}>
+                        {key}: {value.name}
+                    </li>
+                ))}
+            </ul>
             <h1>Monologues</h1>
             <ul>
                 {Object.entries(this.monologues).map(([key, value]) => (
                     <li key={key}>
-                        {this.characters[key].name}: {value}
+                        {key}: {value}
                     </li>
                 ))}
             </ul>
