@@ -169,9 +169,10 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
              @description Whether this is from a bot, conceivably always true. ***/
         } = botMessage;
 
-        console.log('testing: ' + content + ';' + isBot);
+        console.log('testing2: ' + content + ';' + isBot);
         let result = await this.generator.textGen({
             prompt: this.monologuePrompt,
+            stop: [],
             max_tokens: 100,
             include_history: true});
         this.currentMonologue = result ? result.result : '';
