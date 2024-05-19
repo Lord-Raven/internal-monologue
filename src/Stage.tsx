@@ -55,7 +55,10 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
 
     currentMonologue: string;
     monologuePrompt: string;
-    considerPrompt: string;
+
+    formatPrompt(): string {
+        return `[Silently consider {{char}}'s internal thoughts when depicting their actions or dialog: ${this.currentMonologue}]`
+    }
 
     constructor(data: InitialData<InitStateType, ChatStateType, MessageStateType, ConfigType>) {
         /***
@@ -79,7 +82,6 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         this.myInternalState['messageState'] = messageState ?? '';
         this.currentMonologue = '';
         this.monologuePrompt = '[Rather than continue the scene, use this response to transcribe a couple sentences of {{char}}\'s internal monologue about their current situation, based on personality and ongoing events.]';
-        this.considerPrompt = `[Silently consider {{char}}'s internal thoughts when depicting their actions or dialog: ${this.currentMonologue}]`
     }
 
     async load(): Promise<Partial<LoadResponse<InitStateType, ChatStateType, MessageStateType>>> {
@@ -133,7 +135,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             /*** @type null | string @description A string to add to the
              end of the final prompt sent to the LLM,
              but that isn't persisted. ***/
-            stageDirections: this.considerPrompt,
+            stageDirections: this.formatPrompt(),
             /*** @type MessageStateType | null @description the new state after the userMessage. ***/
             messageState: this.currentMonologue,
             /*** @type null | string @description If not null, the user's message itself is replaced
