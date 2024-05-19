@@ -174,7 +174,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             prompt: this.monologuePrompt,
             stop: [],
             max_tokens: 100,
-            include_history: true});
+            include_history: false});
         this.currentMonologue = result ? result.result : '';
 
         /*this.generator.textGen({
