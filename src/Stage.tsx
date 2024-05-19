@@ -78,8 +78,8 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         this.myInternalState = {};
         this.myInternalState['messageState'] = messageState ?? '';
         this.currentMonologue = '';
-        this.monologuePrompt = 'Summarize the internal thoughts of other characters in the scene, based on their personalities and ongoing events.';
-        this.considerPrompt = `These are the internal thoughts of characters in the scene: ${this.currentMonologue}\nSilently consider the internal thoughts of each character when depicting their actions or dialog.`
+        this.monologuePrompt = '[Rather than continue the scene, use this response to describe {{char}}\'s internal monologue with a couple sentences, based on personality and ongoing events.]';
+        this.considerPrompt = `[These are the internal thoughts of characters in the scene: ${this.currentMonologue}\n\nSilently consider the internal thoughts of each character when depicting their actions or dialog.]`
     }
 
     async load(): Promise<Partial<LoadResponse<InitStateType, ChatStateType, MessageStateType>>> {
