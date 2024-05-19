@@ -78,8 +78,8 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         this.myInternalState = {};
         this.myInternalState['messageState'] = messageState ?? '';
         this.currentMonologue = '';
-        this.monologuePrompt = '[Rather than continue the scene, use this response to describe {{char}}\'s internal monologue with a couple sentences, based on personality and ongoing events.]';
-        this.considerPrompt = `[These are the internal thoughts of characters in the scene: ${this.currentMonologue}\n\nSilently consider the internal thoughts of each character when depicting their actions or dialog.]`
+        this.monologuePrompt = '[Rather than continue the scene, use this response to transcribe a couple sentences of {{char}}\'s internal monologue about their current situation, based on personality and ongoing events.]';
+        this.considerPrompt = `[Silently consider {{char}}'s internal thoughts when depicting their actions or dialog: ${this.currentMonologue}]`
     }
 
     async load(): Promise<Partial<LoadResponse<InitStateType, ChatStateType, MessageStateType>>> {
@@ -124,10 +124,11 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             isBot             /*** @type: boolean
              @description Whether this is itself from another bot, ex. in a group chat. ***/
         } = userMessage;
-        await this.generator.textGen({
+        let result = await this.generator.textGen({
             prompt: this.monologuePrompt,
             max_tokens: 100,
-            include_history: true}).then(message => this.currentMonologue = message ? message.result : '');
+            include_history: true});
+        this.currentMonologue = result ? result.result : '';
         return {
             /*** @type null | string @description A string to add to the
              end of the final prompt sent to the LLM,
