@@ -57,7 +57,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
     monologuePrompt: string;
 
     formatPrompt(): string {
-        return `[Silently consider {{char}}'s internal thoughts when depicting their actions or dialog: ${this.currentMonologue}]`
+        return `[These were {{char}}'s internal thoughts prior to {{user}}'s input: ${this.currentMonologue}\nSilently consider {{char}}'s thoughts when depicting their actions or dialog.]`
     }
 
     constructor(data: InitialData<InitStateType, ChatStateType, MessageStateType, ConfigType>) {
@@ -126,11 +126,11 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             isBot             /*** @type: boolean
              @description Whether this is itself from another bot, ex. in a group chat. ***/
         } = userMessage;
-        let result = await this.generator.textGen({
+        /*let result = await this.generator.textGen({
             prompt: this.monologuePrompt,
             max_tokens: 100,
             include_history: true});
-        this.currentMonologue = result ? result.result : '';
+        this.currentMonologue = result ? result.result : '';*/
         return {
             /*** @type null | string @description A string to add to the
              end of the final prompt sent to the LLM,
@@ -167,6 +167,12 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             isBot             /*** @type: boolean
              @description Whether this is from a bot, conceivably always true. ***/
         } = botMessage;
+
+        this.generator.textGen({
+            prompt: this.monologuePrompt,
+            max_tokens: 100,
+            include_history: true}).then(result => this.currentMonologue = result ? result.result : '');
+
         return {
             /*** @type null | string @description A string to add to the
              end of the final prompt sent to the LLM,
