@@ -127,11 +127,11 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
              @description Whether this is itself from another bot, ex. in a group chat. ***/
         } = userMessage;
         console.log('testing: ' + content + ';' + isBot);
-        /*let result = await this.generator.textGen({
+        let result = await this.generator.textGen({
             prompt: this.monologuePrompt,
             max_tokens: 100,
             include_history: true});
-        this.currentMonologue = result ? result.result : '';*/
+        this.currentMonologue = result ? result.result : '';
         return {
             /*** @type null | string @description A string to add to the
              end of the final prompt sent to the LLM,
@@ -170,12 +170,12 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         } = botMessage;
 
         console.log('testing2: ' + content + ';' + isBot);
-        let result = await this.generator.textGen({
+        /*let result = await this.generator.textGen({
             prompt: this.monologuePrompt,
             stop: [],
             max_tokens: 100,
             include_history: false});
-        this.currentMonologue = result ? result.result : '';
+        this.currentMonologue = result ? result.result : '';*/
 
         /*this.generator.textGen({
             prompt: this.monologuePrompt,
