@@ -126,6 +126,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             isBot             /*** @type: boolean
              @description Whether this is itself from another bot, ex. in a group chat. ***/
         } = userMessage;
+        console.log('testing: ' + content + ';' + isBot);
         /*let result = await this.generator.textGen({
             prompt: this.monologuePrompt,
             max_tokens: 100,
@@ -168,10 +169,17 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
              @description Whether this is from a bot, conceivably always true. ***/
         } = botMessage;
 
-        this.generator.textGen({
+        console.log('testing: ' + content + ';' + isBot);
+        let result = await this.generator.textGen({
             prompt: this.monologuePrompt,
             max_tokens: 100,
-            include_history: true}).then(result => this.currentMonologue = result ? result.result : '');
+            include_history: true});
+        this.currentMonologue = result ? result.result : '';
+
+        /*this.generator.textGen({
+            prompt: this.monologuePrompt,
+            max_tokens: 100,
+            include_history: true}).then(result => this.currentMonologue = result ? result.result : '');*/
 
         return {
             /*** @type null | string @description A string to add to the
