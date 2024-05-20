@@ -82,7 +82,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             chatState                              // @type: null | ChatStateType
         } = data;
         this.myInternalState = {};
-        this.monologues = messageState ?? '';
+        this.monologues = messageState ?? {};
         this.characters = characters;
         this.monologues = {};
         this.monologuePrompt = '[Rather than continue the scene, use this response to transcribe a couple brief sentences of {{char}}\'s stream of consciousness thoughts regarding other characters and ongoing events, based on personality and motives.]';
@@ -114,7 +114,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
          or a swipe. Note how neither InitState nor ChatState are given here. They are not for
          state that is affected by swiping.
          ***/
-        this.monologues = state ?? '';
+        this.monologues = state ?? {};
     }
 
     async beforePrompt(userMessage: Message): Promise<Partial<StageResponse<ChatStateType, MessageStateType>>> {
