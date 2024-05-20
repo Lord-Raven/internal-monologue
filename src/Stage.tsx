@@ -140,6 +140,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             let result = await this.generator.textGen({
                 prompt: this.monologuePrompt,
                 max_tokens: 100,
+                stop: [],
                 include_history: true});
             console.log('result:' + result);
             
@@ -238,15 +239,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             <ul>
                 {Object.entries(this.characters).map(([key, value]) => (
                     <li key={key}>
-                        {key}: {value.name}
-                    </li>
-                ))}
-            </ul>
-            <h1>Monologues</h1>
-            <ul>
-                {Object.entries(this.monologues).map(([key, value]) => (
-                    <li key={key}>
-                        {key}: {value}
+                        {value.name}: {this.monologues[key]}
                     </li>
                 ))}
             </ul>
