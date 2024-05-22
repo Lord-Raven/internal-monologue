@@ -59,7 +59,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
     monologuePrompt: string;
 
     formatPrompt(characterId: string|null): string {
-        return (!characterId || this.monologues[characterId]) ? '' :
+        return (!characterId || !this.monologues[characterId]) ? '' :
             `[These were ${this.characters[characterId].name}'s internal thoughts prior to {{user}}'s input: ${this.monologues[characterId]}\nSilently consider these thoughts when depicting this character's actions or dialog.]`;
     }
 
@@ -144,6 +144,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                 include_history: true});
             if (result) {
                 console.log('result:' + result.result);
+
             } else {
                 console.log('no result');
             }
