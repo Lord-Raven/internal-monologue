@@ -142,11 +142,14 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                 max_tokens: 100,
                 stop: [],
                 include_history: true});
-            console.log('result:' + result.result);
-            
+            if (result) {
+                console.log('result:' + result.result);
+            } else {
+                console.log('no result');
+            }
             this.monologues[promptForId] = result ? result.result : '';
         }
-        console.log('after: ' + this.promptForId + ":" + this.formatPrompt(promptForId));
+        console.log('after: ' + promptForId + ":" + this.formatPrompt(promptForId));
         return {
             /*** @type null | string @description A string to add to the
              end of the final prompt sent to the LLM,
