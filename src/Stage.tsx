@@ -113,6 +113,9 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
          or a swipe. Note how neither InitState nor ChatState are given here. They are not for
          state that is affected by swiping.
          ***/
+         console.log('await messenger');
+         await this.messenger.updateEnvironment({background: null});
+         console.log('messenger complete');
         this.monologues = state ?? {};
     }
 
@@ -136,9 +139,6 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         } = userMessage;
         console.log('testing: ' + content + ';' + isBot + ';' + promptForId + ';' + identity);
         if (promptForId) {
-            console.log('await messenger');
-            await this.messenger.updateEnvironment({});
-            console.log('messenger complete; now textGen');
             let result = await this.generator.textGen({
                 prompt: this.monologuePrompt,
                 min_tokens: 25,
