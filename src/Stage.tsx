@@ -141,7 +141,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                 min_tokens: 25,
                 max_tokens: 100,
                 stop: [],
-                include_history: false,
+                include_history: true,
                 template: '{{history}}',
                 context_length: 2500});
             if (result) {
