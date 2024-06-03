@@ -140,13 +140,13 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         console.log('testing: ' + content + ';' + isBot + ';' + promptForId + ';' + identity);
         if (promptForId) {
 
-            console.log('Attempting API call.');
+            /*console.log('Attempting API call.');
             let response: object = await this.getApiResponse(`https://api.chub.ai/api/venus/chats/v2/${this.getChatId()}/messages/main`, 
                 {
                     "message_ids": [identity],
                     "set": true
                 });
-            console.log('messenger complete');
+            console.log('messenger complete');*/
 
             let result = await this.generator.textGen({
                 prompt: this.monologuePrompt,
@@ -235,7 +235,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
 
     getChatId(): number {
         if (!this.chatId || this.chatId <= 0) {
-            const url = window.location.href;
+            const url = window.parent.location.href;
             console.log('url:' + url);
             const match = url.match(/(\d+)(?!.*\d)/);
             this.chatId = match ? parseInt(match[1], 10) : -1;
@@ -252,8 +252,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(body),
-            mode: 'cors',
-            credentials: 'include'
+            mode: 'cors'
         });
 
         if (!response.ok) {
