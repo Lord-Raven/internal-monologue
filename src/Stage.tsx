@@ -234,15 +234,15 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
     }
 
     getChatId(): number {
-        if (!this.chatId || this.chatId <= 0) {
+        /*if (!this.chatId || this.chatId <= 0) {
             const url = window.parent.location.href;
             console.log('url:' + url);
             const match = url.match(/(\d+)(?!.*\d)/);
             this.chatId = match ? parseInt(match[1], 10) : -1;
             console.log('Found ID?' + this.chatId);
-        }
+        }*/
 
-        return this.chatId;
+        return -1;//this.chatId;
     }
 
     async getApiResponse(url: string, body: object): Promise<object> {
