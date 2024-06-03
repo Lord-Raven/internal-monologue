@@ -235,7 +235,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
 
     getChatId(): number {
         if (!this.chatId || this.chatId <= 0) {
-            const url = window.location.pathname;
+            const url = window.location.href;
             console.log('url:' + url);
             const match = url.match(/(\d+)(?!.*\d)/);
             this.chatId = match ? parseInt(match[1], 10) : -1;
@@ -252,8 +252,8 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(body),
-            mode: 'cors'
-            //credentials: 'include'
+            mode: 'cors',
+            credentials: 'include'
         });
 
         if (!response.ok) {
