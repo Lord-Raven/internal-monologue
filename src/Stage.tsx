@@ -153,7 +153,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                 min_tokens: 10,
                 max_tokens: 100,
                 stop: [],
-                include_history: false,
+                include_history: true,
                 template: '{{personality}};{{memory}};{{profile}};{{summary}}',
                 context_length: 2500});
             if (result) {
@@ -203,12 +203,12 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         } = botMessage;
 
         console.log('testing2: ' + content + ';' + isBot);
-        /*let result = await this.generator.textGen({
+        let result = await this.generator.textGen({
             prompt: this.monologuePrompt,
             stop: [],
             max_tokens: 100,
-            include_history: false});
-        this.currentMonologue = result ? result.result : '';*/
+            include_history: true});
+        this.monologues[anonymizedId] = result ? result.result : '';
 
         /*this.generator.textGen({
             prompt: this.monologuePrompt,
