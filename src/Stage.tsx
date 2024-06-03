@@ -150,11 +150,11 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
 
             let result = await this.generator.textGen({
                 prompt: this.monologuePrompt,
-                min_tokens: 25,
+                min_tokens: 10,
                 max_tokens: 100,
                 stop: [],
-                include_history: true,
-                template: '{{history}}',
+                include_history: false,
+                template: '{{personality}};{{memory}};{{profile}};{{summary}}',
                 context_length: 2500});
             if (result) {
                 console.log('result:' + result.result);
