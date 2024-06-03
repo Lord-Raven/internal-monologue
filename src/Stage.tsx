@@ -54,6 +54,8 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
      ***/
     myInternalState: {[key: string]: any};
 
+    chatId: number;
+
     monologues: {[key: string]: string};
     characters: {[key: string]: Character};
     readonly monologuePrompt: string = '[Rather than continue the narration, use this response to transcribe a couple brief sentences of {{char}}\'s current first-person thoughts about the scene in this exact moment, shaped by personality, motives, and recent events.]';
@@ -85,6 +87,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         this.monologues = messageState ?? {};
         this.characters = characters;
         this.monologues = {};
+        this.chatId = this.getChatId();
     }
 
     async load(): Promise<Partial<LoadResponse<InitStateType, ChatStateType, MessageStateType>>> {
@@ -113,9 +116,6 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
          or a swipe. Note how neither InitState nor ChatState are given here. They are not for
          state that is affected by swiping.
          ***/
-         console.log('await messenger');
-         await this.messenger.updateEnvironment({background: null});
-         console.log('messenger complete');
         this.monologues = state ?? {};
     }
 
@@ -139,6 +139,15 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         } = userMessage;
         console.log('testing: ' + content + ';' + isBot + ';' + promptForId + ';' + identity);
         if (promptForId) {
+
+            console.log('Attempting API call.');
+            let response: object = await this.getApiResponse(`https://api.chub.ai/api/venus/chats/v2/${this.getChatId()}/messages/main`, 
+                {
+                    "message_ids": [identity],
+                    "set": true
+                });
+            console.log('messenger complete');
+
             let result = await this.generator.textGen({
                 prompt: this.monologuePrompt,
                 min_tokens: 25,
@@ -224,7 +233,34 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         };
     }
 
+    getChatId(): number {
+        if (this.chatId <= 0) {
+            const url = window.location.pathname;
+            const match = url.match(/(\d+)(?!.*\d)/);
+            this.chatId = match ? parseInt(match[1], 10) : -1;
+            console.log('Found ID?' + this.chatId);
+        }
 
+        return this.chatId;
+    }
+
+    async getApiResponse(url: string, body: object): Promise<object> {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(body),
+            credentials: 'include'
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return response.json() as Promise<object>;
+      }
+    
     render(): ReactElement {
         /***
          There should be no "work" done here. Just returning the React element to display.
