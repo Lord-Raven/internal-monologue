@@ -138,6 +138,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         if (promptForId) {
             let result = await this.generator.textGen({
                 prompt: this.monologuePrompt,
+                min_tokens: 25,
                 max_tokens: 100,
                 stop: [],
                 include_history: true});
