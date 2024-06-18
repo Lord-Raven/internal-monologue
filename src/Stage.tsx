@@ -224,7 +224,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                     console.log('Remove event listener:' + messageType);
                     console.log(event.data);
                     if (messageType != null && messageType == uuid) {
-                        window.removeEventListener("monologue", handleResponse);
+                        window.removeEventListener("message", handleResponse);
                         responded = true;
                         if (data != null && data.hasOwnProperty('error') && data.error != null) {
                             console.error(`Error for ${messageTypeSending}, error: ${data.error}`);
@@ -236,12 +236,13 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             };
             console.log('Add event listener:' + messageTypeSending);
             console.log(message);
-            window.addEventListener("monologue", handleResponse);
+            window.addEventListener("message", handleResponse);
             window.parent.postMessage({"messageType": messageTypeSending, "data": message}, '*');
 
 
             setTimeout(() => {
-                window.removeEventListener("monologue", handleResponse);
+                console.log('Timed out');
+                window.removeEventListener("message", handleResponse);
                 if (!responded) {
                     console.error(`Response timeout for ${messageTypeSending}`);
                     resolve(null);
