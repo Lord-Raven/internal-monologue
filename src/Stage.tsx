@@ -188,9 +188,13 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             let result: TextResponse|null = null;
             while (!(result?.result) && retries > 0) {
                 result = await this.generator.textGen({
-                    prompt: 'Write a few sentences about being cool.',
+                    prompt: monologuePrompt,
                     min_tokens: 50,
-                    max_tokens: 400
+                    max_tokens: 200,
+                    include_history: false,
+                    template: '',
+                    stop: [],
+                    context_length: 2500
                 });
                 retries--;
             }
