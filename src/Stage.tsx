@@ -104,6 +104,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         while(this.messageParentIds[currentId] && this.messageParentIds[currentId] != currentId && depth < 10) {
             currentId = this.messageParentIds[currentId];
             historyString = `${this.messageBodies[currentId] ?? ''}\n\n${historyString}`;
+            console.log(currentId + ":" + this.messageBodies[currentId]);
             depth++;
         }
 
@@ -129,7 +130,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             promptForId,
             identity
         } = userMessage;
-        console.log('testing: ' + content + ';' + isBot + ';' + promptForId + ';' + identity);
+        console.log('testing: ' + content + ';' + isBot + ';' + promptForId + ';' + identity + ';' + this.messageId);
         this.messageParentIds[identity] = this.messageId;
         this.messageId = identity;
         this.messageBodies[identity] = `###Input: ${this.user.name}: ${content}`;
@@ -183,7 +184,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                 `[/INST]\n${history}\n${promptedCharacter.post_history_instructions}\n` +
                 `${this.monologuePrompt}`;
 
-            monologuePrompt = this.replaceTags(monologuePrompt, {"user": this.user.name, "char": promptedCharacter.name});
+            monologuePrompt = this.replaceTags(monologuePrompt, {"user": this.user.name, "char": promptedCharacter.name, "original": ''});
 
             console.log('generating:' + monologuePrompt);
             let result = await this.generator.textGen({
