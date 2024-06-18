@@ -101,7 +101,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         let currentId = messageId;
         let historyString = this.messageBodies[currentId] ?? '';
         let depth = 0;
-        while(this.messageParentIds[currentId] && depth < 10) {
+        while(this.messageParentIds[currentId] && this.messageParentIds[currentId] != currentId && depth < 10) {
             currentId = this.messageParentIds[currentId];
             historyString = `${this.messageBodies[currentId] ?? ''}\n\n${historyString}`;
             depth++;
@@ -173,6 +173,8 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         if (characterId && this.characters[characterId] && characterId != this.user.anonymizedId) {
             // Build monologue prompt:
             const promptedCharacter = this.characters[characterId];
+            console.log('first message:');
+            console.log(promptedCharacter.first_message);
             const history = this.buildHistory(this.messageId);
             let monologuePrompt = `[INST]\n### Instruction:\n${promptedCharacter.system_prompt}\n` +
                 `About ${promptedCharacter.name}: ${promptedCharacter.description}\n${promptedCharacter.personality}\n` +
