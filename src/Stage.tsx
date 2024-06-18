@@ -196,7 +196,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                     max_tokens: 200,
                     include_history: false,
                     template: '',
-                    stop: [],
+                    stop: ["USER:", "#", "["],
                     context_length: 4000
                 }, 60);
             //    retries--;
@@ -221,8 +221,8 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
 }
 
 async function sendMessageAndAwait<ResponseType>(messageTypeSending: string,
-                                                 message: any,
-                                                 timeout: number = 600): Promise<ResponseType | null> {
+    message: any,
+    timeout: number = 600): Promise<ResponseType | null> {
     return new Promise((resolve, _reject) => {
         const uuid: string = v4();
         message['uuid'] = uuid;
@@ -250,21 +250,14 @@ async function sendMessageAndAwait<ResponseType>(messageTypeSending: string,
         window.addEventListener("message", handleResponse);
         window.parent.postMessage({"messageType": messageTypeSending, "data": message}, '*');
 
-        try {
-            return Promise.race([
-                new Promise<ResponseType | null>((event) => setTimeout(() => {
-                    window.removeEventListener("message", handleResponse);
-                    console.log('Timed out');
-                    resolve(null);
-                }, timeout * 1000)),
-                new Promise<ResponseType | null>((event) => {
-                    console.log('handleResponse');
-                    handleResponse(event)
-                })
-            ]);
-        } catch (error) {
-            console.error(`Unexpected error for ${messageTypeSending}: ${error}`);
-            return null;
-        }
+
+        setTimeout(() => {
+            console.log('Timed out');
+            window.removeEventListener("message", handleResponse);
+            if (!responded) {
+                console.error(`Response timeout for ${messageTypeSending}`);
+                resolve(null);
+            }
+        }, timeout * 1000);
     });
 }
