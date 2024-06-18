@@ -225,6 +225,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                     console.log(event.data);
                     console.log(data);
                     if (messageType != null && messageType == uuid) {
+                        console.log('Actually remove');
                         window.removeEventListener("message", handleResponse);
                         responded = true;
                         if (data != null && data.hasOwnProperty('error') && data.error != null) {
