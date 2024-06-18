@@ -190,7 +190,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             console.log('textGen');
             let result: TextResponse|null = null;
             //while (!(result?.result) && retries > 0) {
-                result = await sendMessageAndAwait<TextResponse>("TEXT2TEXT", {
+                result = await this.generator.textGen({//await sendMessageAndAwait<TextResponse>("TEXT2TEXT", {
                     prompt: monologuePrompt,
                     min_tokens: 50,
                     max_tokens: 200,
@@ -198,7 +198,8 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                     template: '',
                     stop: ["USER:", "#", "["],
                     context_length: 4000
-                }, 60);
+                });
+                //}, 60);
             //    retries--;
             //}
             if (result) {
