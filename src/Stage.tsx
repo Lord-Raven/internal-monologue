@@ -221,7 +221,8 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             const handleResponse = (event: any) => {
                 if (event.source === window.parent && ALLOWED_ORIGINS.has(event.origin)) {
                     const { messageType, data } = event.data;
-                    if (messageType != null && messageType == uuid) {
+                    console.log('Remove event listener:' + messageType + ';' + event.data.messageId);
+                    if (messageType != null && event.data.messageId == uuid) {
                         window.removeEventListener("message", handleResponse);
                         responded = true;
                         if (data != null && data.hasOwnProperty('error') && data.error != null) {
