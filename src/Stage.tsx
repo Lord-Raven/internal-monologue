@@ -2,6 +2,8 @@ import {ReactElement} from "react";
 import {StageBase, StageResponse, InitialData, Message, TextResponse} from "@chub-ai/stages-ts";
 import {LoadResponse} from "@chub-ai/stages-ts/dist/types/load";
 import {Character, User} from "@chub-ai/stages-ts";
+import {ALLOWED_ORIGINS} from "@chub-ai/stages-ts/dist/services/messaging";
+import {v4} from "uuid";
 
 type MessageStateType = any;
 
@@ -188,7 +190,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             console.log('textGen');
             let result: TextResponse|null = null;
             //while (!(result?.result) && retries > 0) {
-                result = await this.generator.textGen({
+                result = await this.sendMessageAndAwait<TextResponse>("TEXT2TEXT", {
                     prompt: monologuePrompt,
                     min_tokens: 50,
                     max_tokens: 200,
@@ -196,7 +198,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                     template: '',
                     stop: [],
                     context_length: 2500
-                });
+                }, 1000);
             //    retries--;
             //}
             if (result) {
@@ -207,6 +209,42 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             }
             this.monologues[characterId] = result ? result.result : '';
         }
+    }
+
+    sendMessageAndAwait<ResponseType>(messageTypeSending: string,
+                                                      message: any,
+                                                      timeout: number = 600): Promise<ResponseType | null> {
+        return new Promise((resolve, _reject) => {
+            const uuid: string = v4();
+            message['uuid'] = uuid;
+            let responded = false;
+            const handleResponse = (event: any) => {
+                if (event.source === window.parent && ALLOWED_ORIGINS.has(event.origin)) {
+                    const { messageType, data } = event.data;
+                    if (messageType != null && messageType == uuid) {
+                        window.removeEventListener("message", handleResponse);
+                        responded = true;
+                        if (data != null && data.hasOwnProperty('error') && data.error != null) {
+                            console.error(`Error for ${messageTypeSending}, error: ${data.error}`);
+                            resolve(null);
+                        }
+                        resolve(data);
+                    }
+                }
+            };
+            console.log('Add event listener');
+            window.addEventListener("message", handleResponse);
+            window.parent.postMessage({"messageType": messageTypeSending, "data": message}, '*');
+
+
+            setTimeout(() => {
+                window.removeEventListener("message", handleResponse);
+                if (!responded) {
+                    console.error(`Response timeout for ${messageTypeSending}`);
+                    resolve(null);
+                }
+            }, timeout * 1000);
+        });
     }
 
     
