@@ -178,10 +178,10 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             const promptedCharacter = this.characters[characterId];
             const history = this.buildHistory(this.messageId);
             let monologuePrompt = `[INST]\n### Instruction:\n${promptedCharacter.system_prompt}\n` +
-                //`About ${promptedCharacter.name}: ${promptedCharacter.description}\n${promptedCharacter.personality}\n` +
-                //`Circumstances and context of the dialogue: ${promptedCharacter.scenario}\n` +
-                //`About ${this.user.name}: ${this.user.chatProfile}\n` +
-                //`[/INST]\n${history}\n${promptedCharacter.post_history_instructions}\n` +
+                `About ${promptedCharacter.name}: ${promptedCharacter.description}\n${promptedCharacter.personality}\n` +
+                `Circumstances and context of the dialogue: ${promptedCharacter.scenario}\n` +
+                `About ${this.user.name}: ${this.user.chatProfile}\n` +
+                `[/INST]\n${history}\n${promptedCharacter.post_history_instructions}\n` +
                 `${this.monologuePrompt}`;
 
             monologuePrompt = this.replaceTags(monologuePrompt, {"user": this.user.name, "char": promptedCharacter.name, "original": ''});
@@ -221,8 +221,8 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             const handleResponse = (event: any) => {
                 if (event.source === window.parent && ALLOWED_ORIGINS.has(event.origin)) {
                     const { messageType, data } = event.data;
-                    console.log('Remove event listener:' + messageType + ';' + event.data.messageId);
-                    if (messageType != null && event.data.messageId == uuid) {
+                    console.log('Remove event listener:' + messageType + ';' + event.data.uuid);
+                    if (messageType != null && event.data.uuid == uuid) {
                         window.removeEventListener("message", handleResponse);
                         responded = true;
                         if (data != null && data.hasOwnProperty('error') && data.error != null) {
@@ -233,7 +233,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                     }
                 }
             };
-            console.log('Add event listener');
+            console.log('Add event listener:' + messageTypeSending + ';' + message);
             window.addEventListener("message", handleResponse);
             window.parent.postMessage({"messageType": messageTypeSending, "data": message}, '*');
 
