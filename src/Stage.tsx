@@ -186,7 +186,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             let retries = 3;
             console.log('generating:' + monologuePrompt);
             let result: TextResponse|null = null;
-            while (!(result?.result) && retries > 0) {
+            //while (!(result?.result) && retries > 0) {
                 result = await this.generator.textGen({
                     prompt: monologuePrompt,
                     min_tokens: 50,
@@ -196,8 +196,8 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                     stop: [],
                     context_length: 2500
                 });
-                retries--;
-            }
+            //    retries--;
+            //}
             if (result) {
                 console.log('result');
                 console.log(result);
