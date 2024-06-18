@@ -7,9 +7,14 @@ project_name: "Internal Monologue"
 # A short tagline to show in search.
 tagline: "Empower thoughtful bots--who keep those thoughts to themselves."
 
-creator_notes: "***Warning: This stage does not currently persist the user's post-history prompt to the LLM for its prompts;
-if you rely on a jailbreak in your prompt, this stage will NOT honor it. As a result, please do not include this stage 
-directly on character cards at this time. This will hopefully change with the next wave of stage improvements.***
+creator_notes: "***Warning: This stage does not currently persist the user's pre- or post-history prompt to the LLM for its prompts;
+if you rely on a jailbreak in these settings, this stage will NOT honor it. As a result, please do not include this stage 
+directly on character cards at this time.***
+<br>
+<br>
+That said, if you still want to use it with your jailbreak, you should be able to edit the character you're chatting with 
+and apply your jailbreak directly to them--those elements will be persisted to the LLM. Hopefully, I'll be able to address 
+this with the next wave of stage improvements.
 <br>
 <br>
 **What It Does:**
@@ -37,8 +42,13 @@ output to the browser's console.
 <br>
 <br>
 The stage currently does some hacky things to construct chat history, and as a result, it will not be aware of events 
-that occurred prior to being added to a chat, so you may initially see wonky results when adding it in medias res. 
-This (and the post-history issue above) should be resolvable when stages receive the planned prompt templating support."
+that occurred prior to being added to a chat, so you may initially see wonky results when adding it in medias res. The 
+stage also has no awareness of character or lore books and if you swipe intros after adding the stage, it won't pick up
+on the correct intro for its own history tracking (but you can swipe intros and then add the stage).
+<br>
+<br>
+These shortcoming (and the post-history issue above) will 
+hopefully be resolvable when stages receive the planned prompt templating support."
 
 # 'PUBLIC', 'PRIVATE', or 'UNLISTED'.
 visibility: 'UNLISTED'

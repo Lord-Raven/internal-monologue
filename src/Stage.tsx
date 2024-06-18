@@ -190,7 +190,9 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             let result = await this.generator.textGen({
                 prompt: monologuePrompt,
                 min_tokens: 50,
-                max_tokens: 200
+                max_tokens: 200,
+                context_length: 2500,
+                stop: []
             });
             if (result) {
                 console.log('result');
