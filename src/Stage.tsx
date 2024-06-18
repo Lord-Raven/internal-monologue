@@ -39,7 +39,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         const {
             characters,
             users,
-            config,
+            // config,
             messageState,
             chatState
         } = data;
@@ -125,7 +125,6 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         this.messageId = identity;
         this.messageBodies[identity] = `###Input: ${this.user.name}: ${content}`;
         if (promptForId && this.characters[promptForId] && promptForId != this.user.anonymizedId) {
-            console.log('generating');
             // Build monologue prompt:
             const promptedCharacter = this.characters[promptForId];
             const history = this.buildHistory(this.messageId);
@@ -136,6 +135,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                 `[/INST]\n${history}\n${promptedCharacter.post_history_instructions}\n` +
                 `${this.monologuePrompt}`;
 
+            console.log('generating:' + monologuePrompt);
             let result = await this.generator.textGen({
                 prompt: monologuePrompt,
                 min_tokens: 50,
