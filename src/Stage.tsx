@@ -183,8 +183,9 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                 `${this.monologuePrompt}`;
 
             monologuePrompt = this.replaceTags(monologuePrompt, {"user": this.user.name, "char": promptedCharacter.name, "original": ''});
-            let retries = 3;
-            console.log('generating:' + monologuePrompt);
+            //let retries = 3;
+            //console.log('generating:' + monologuePrompt);
+            console.log('textGen');
             let result: TextResponse|null = null;
             //while (!(result?.result) && retries > 0) {
                 result = await this.generator.textGen({
