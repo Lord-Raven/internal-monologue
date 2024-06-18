@@ -13,7 +13,7 @@ type ChatStateType = any;
 
 export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateType, ConfigType> {
 
-    readonly monologuePrompt: string = '[Rather than continue the narration, use this response to transcribe a couple brief sentences of {{char}}\'s current first-person thoughts about the past few moments of the scene, shaped by personality, motives, and recent events. Describe their honest opinions and the reactions they are considering in the moment]';
+    readonly monologuePrompt: string = '[INST]Analyze {{char}}\'s description and recent events in this chatlog, then transcribe a couple brief sentences of {{char}}\'s current first-person thoughts about the past few moments of the scene, shaped by personality, motives, and recent events. Describe their honest opinions and the actions they are considering in the moment.[/INST]';
 
     // chatState
     messageParentIds: {[key: string]: string};
@@ -30,7 +30,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
 
     formatPrompt(characterId: string|null): string {
         return (!characterId || !this.monologues[characterId]) ? '' :
-            `[These are ${this.characters[characterId].name}'s internal thoughts: ${this.monologues[characterId]}\nTacitly consider these thoughts when depicting this character's actions or dialog.]`;
+            `[INST]These are ${this.characters[characterId].name}'s internal thoughts: ${this.monologues[characterId]}\nTacitly consider these thoughts when depicting this character's actions or dialog.[/INST]`;
     }
 
     constructor(data: InitialData<InitStateType, ChatStateType, MessageStateType, ConfigType>) {
@@ -150,7 +150,8 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                 max_tokens: 200
             });
             if (result) {
-                console.log('result:' + result.result);
+                console.log('result');
+                console.log(result);
             } else {
                 console.log('no result');
             }
