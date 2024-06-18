@@ -101,11 +101,17 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         let depth = 0;
         while(this.messageParentIds[currentId] && depth < 10) {
             currentId = this.messageParentIds[currentId];
-            historyString = `${historyString}\n\n${this.messageBodies[currentId] ?? ''}`;
+            historyString = `${this.messageBodies[currentId] ?? ''}\n\n${historyString}`;
             depth++;
         }
 
         return historyString;
+    }
+
+    replaceTags(source: string, replacements: {[name: string]: string}) {
+        return source.replace(/{{([A-z]*)}}/g, (match) => {
+            return replacements[match.substring(2, match.length - 2)];
+        });
     }
 
     async setState(messageState: MessageStateType): Promise<void> {
@@ -135,6 +141,8 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                 `[/INST]\n${history}\n${promptedCharacter.post_history_instructions}\n` +
                 `${this.monologuePrompt}`;
 
+            monologuePrompt = this.replaceTags(monologuePrompt, {"user": this.user.name, "char": promptedCharacter.name});
+
             console.log('generating:' + monologuePrompt);
             let result = await this.generator.textGen({
                 prompt: monologuePrompt,
@@ -160,9 +168,6 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
     }
 
     async afterResponse(botMessage: Message): Promise<Partial<StageResponse<ChatStateType, MessageStateType>>> {
-        /***
-         This is called immediately after a response from the LLM.
-         ***/
         const {
             identity,
             content,
@@ -173,7 +178,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         console.log('testing2: ' + content + ';' + isBot);
         this.messageParentIds[identity] = this.messageId;
         this.messageId = identity;
-        this.messageBodies[identity] = `###Response: ${this.characters[anonymizedId]}: ${content}`;
+        this.messageBodies[identity] = this.replaceTags(`###Response: {{char}}: ${content}`, {"user": this.user.name, "char": this.characters[anonymizedId].name});
 
         return {
             stageDirections: null,
