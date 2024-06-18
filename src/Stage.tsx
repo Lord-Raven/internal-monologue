@@ -13,7 +13,7 @@ type ChatStateType = any;
 
 export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateType, ConfigType> {
 
-    readonly monologuePrompt: string = '[INST]Analyze {{char}}\'s description and recent events in this chatlog, then transcribe a couple brief sentences of {{char}}\'s current first-person thoughts about the past few moments of the scene, shaped by personality, motives, and recent events. Describe their honest opinions and the actions they are considering in the moment.[/INST]';
+    readonly monologuePrompt: string = '[INST]Analyze {{char}}\'s description and recent events in this narrative chat log, then transcribe a couple brief sentences of {{char}}\'s current first-person thoughts about the past few moments of the scene, shaped by personality, motives, and recent events. Describe their honest opinions and the actions they are considering in the moment.[/INST]';
 
     // chatState
     messageParentIds: {[key: string]: string};
@@ -26,6 +26,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
     // other
     characters: {[key: string]: Character};
     user: User;
+    //perSwipeMode: boolean;
 
 
     formatPrompt(characterId: string|null): string {
@@ -39,7 +40,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         const {
             characters,
             users,
-            // config,
+            //config,
             messageState,
             chatState
         } = data;
@@ -51,6 +52,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         this.messageBodies = {};
         this.readChatState(chatState);
         this.readMessageState(messageState);
+        //this.perSwipeMode = 'Per Input' !== config?.perSwipeMode;
     }
 
     async load(): Promise<Partial<LoadResponse<InitStateType, ChatStateType, MessageStateType>>> {
@@ -115,6 +117,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
     }
 
     async setState(messageState: MessageStateType): Promise<void> {
+        console.log('setState');
         this.readMessageState(messageState);
     }
 
@@ -130,34 +133,9 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         this.messageParentIds[identity] = this.messageId;
         this.messageId = identity;
         this.messageBodies[identity] = `###Input: ${this.user.name}: ${content}`;
-        if (promptForId && this.characters[promptForId] && promptForId != this.user.anonymizedId) {
-            // Build monologue prompt:
-            const promptedCharacter = this.characters[promptForId];
-            const history = this.buildHistory(this.messageId);
-            let monologuePrompt = `[INST]\n### Instruction:\n${promptedCharacter.system_prompt}\n` +
-                `About ${promptedCharacter.name}: ${promptedCharacter.description}\n${promptedCharacter.personality}\n` +
-                `Circumstances and context of the dialogue: ${promptedCharacter.scenario}\n` +
-                `About ${this.user.name}: ${this.user.chatProfile}\n` +
-                `[/INST]\n${history}\n${promptedCharacter.post_history_instructions}\n` +
-                `${this.monologuePrompt}`;
 
-            monologuePrompt = this.replaceTags(monologuePrompt, {"user": this.user.name, "char": promptedCharacter.name});
+        await this.generateMonologue(promptForId ?? '');
 
-            console.log('generating:' + monologuePrompt);
-            let result = await this.generator.textGen({
-                prompt: monologuePrompt,
-                min_tokens: 50,
-                max_tokens: 200
-            });
-            if (result) {
-                console.log('result');
-                console.log(result);
-            } else {
-                console.log('no result');
-            }
-            this.monologues[promptForId] = result ? result.result : '';
-        }
-        console.log('after: ' + promptForId + ":" + this.formatPrompt(promptForId));
         return {
             stageDirections: this.formatPrompt(promptForId),
             messageState: this.writeMessageState(),
@@ -189,6 +167,36 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             systemMessage: null,
             chatState: this.writeChatState()
         };
+    }
+
+    async generateMonologue(characterId: string) {
+        if (characterId && this.characters[characterId] && characterId != this.user.anonymizedId) {
+            // Build monologue prompt:
+            const promptedCharacter = this.characters[characterId];
+            const history = this.buildHistory(this.messageId);
+            let monologuePrompt = `[INST]\n### Instruction:\n${promptedCharacter.system_prompt}\n` +
+                `About ${promptedCharacter.name}: ${promptedCharacter.description}\n${promptedCharacter.personality}\n` +
+                `Circumstances and context of the dialogue: ${promptedCharacter.scenario}\n` +
+                `About ${this.user.name}: ${this.user.chatProfile}\n` +
+                `[/INST]\n${history}\n${promptedCharacter.post_history_instructions}\n` +
+                `${this.monologuePrompt}`;
+
+            monologuePrompt = this.replaceTags(monologuePrompt, {"user": this.user.name, "char": promptedCharacter.name});
+
+            console.log('generating:' + monologuePrompt);
+            let result = await this.generator.textGen({
+                prompt: monologuePrompt,
+                min_tokens: 50,
+                max_tokens: 200
+            });
+            if (result) {
+                console.log('result');
+                console.log(result);
+            } else {
+                console.log('no result');
+            }
+            this.monologues[characterId] = result ? result.result : '';
+        }
     }
 
     

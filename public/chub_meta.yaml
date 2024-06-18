@@ -5,7 +5,40 @@
 project_name: "Internal Monologue"
 
 # A short tagline to show in search.
-# tagline: "A base template for all stages."
+tagline: "Empower thoughtful bots--who keep those thoughts to themselves."
+
+creator_notes: "***Warning: This stage does not currently persist the user's post-history prompt to the LLM for its prompts;
+if you rely on a jailbreak in your prompt, this stage will NOT honor it. As a result, please do not include this stage 
+directly on character cards at this time. This will hopefully change with the next wave of stage improvements.***
+<br>
+<br>
+**What It Does:**
+<br>
+This stage introduces a behind-the-scenes concept of internal character monologues. Before each response, 
+the stage submits an additional prompt to the LLM to gather the next character's personal thoughts on their situation,
+current goals, and possible next moves. These thoughts are then fed back into the character's response prompt with
+instruction to tacitly consider and act upon them where appropriate.
+<br>
+<br>
+The upshot is that characters should more consistently adhere to their personalities and plans, making more thoughtful
+choices without sharing those thoughts with the user--which is great if they have ulterior motives to maintain.
+<br>
+<br>
+**Usage Notes:**
+<br>
+The monologue is generated after each user input, which entails an additional call to the LLM. Generally, these
+calls are lighter than others, because only the last several chat messages are (currently) included. Because the monologue 
+is generated per-input, swipes may yield similar results, as the bot's thoughts are already established. Furthermore, if
+you edit your input, those changes will not be reflected in the monologue.
+<br>
+<br>
+If you don't mind spoilers--or just need to know what on Earth the bot was thinking--, every generated monologue is 
+output to the browser's console.
+<br>
+<br>
+The stage currently does some hacky things to construct chat history, and as a result, it will not be aware of events 
+that occurred prior to being added to a chat, so you may initially see wonky results when adding it in medias res. 
+This (and the post-history issue above) should be resolvable when stages receive the planned prompt templating support."
 
 # 'PUBLIC', 'PRIVATE', or 'UNLISTED'.
 visibility: 'UNLISTED'
@@ -21,21 +54,25 @@ visibility: 'UNLISTED'
 position: 'NONE'
 
 # Self-explanatory.
-# tags:
-#  - 'Stage'
-#  - 'Admin'
-#  - 'Template'
-#  - 'Base'
+tags:
+  - 'Stage'
+  - 'Enhancement'
+  - 'Add-On'
+  - 'Background'
 
 # The schema of any user-supplied config.
 # If your stage requires a configuration but has no
 #   defined schema, it won't work.
-config_schema:
-  type: object
-# properties:
-#   health:
-#     type: integer
-#     default: 100
+# config_schema:
+#  title: Internal Monologue Settings
+#  type: object
+#  properties:
+#    perSwipeMode:
+#      title: Monologue Generation Point
+#      description: Determines whether the monologue is generated per user input (conserve requests and reduce per-swipe overhead) or per swipe (more dynamic swipe results).
+#      type: string
+#      default: Per Swipe
+#      enum: ["Per Input", "Per Swipe"]
 
 # The schema of the state that you store.
 # This isn't needed even if you do store state,
