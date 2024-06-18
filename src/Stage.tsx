@@ -13,7 +13,7 @@ type ChatStateType = any;
 
 export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateType, ConfigType> {
 
-    readonly monologuePrompt: string = '[INST]Analyze {{char}}\'s description and recent events in this narrative chat log, then transcribe a couple brief sentences of {{char}}\'s current first-person thoughts about the past few moments of the scene, shaped by personality, motives, and recent events. Describe their honest opinions and the actions they are considering in the moment.[/INST]';
+    readonly monologuePrompt: string = '[INST]Analyze {{char}}\'s description and recent events in this narrative chat log, then output a couple brief sentences of {{char}}\'s current first-person thoughts about the past few moments of the scene, shaped by personality, motives, and recent events. Describe their honest opinions and the actions they are considering in the moment.[/INST]';
 
     // chatState
     messageParentIds: {[key: string]: string};
@@ -190,7 +190,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             let result = await this.generator.textGen({
                 prompt: monologuePrompt,
                 min_tokens: 50,
-                max_tokens: 200,
+                max_tokens: 400,
                 context_length: 2500,
                 stop: []
             });
