@@ -188,7 +188,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
 
             console.log('generating:' + monologuePrompt);
             let result = await this.generator.textGen({
-                prompt: monologuePrompt,
+                prompt: 'Write a few sentences about being cool.',
                 min_tokens: 50,
                 max_tokens: 400,
                 context_length: 2500,
