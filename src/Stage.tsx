@@ -64,6 +64,8 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
     }
 
     readMessageState(messageState: MessageStateType) {
+        console.log('readChatState');
+        console.log(messageState);
         this.monologues = messageState.monologues ?? {};
         this.messageId = messageState.messageId ?? '';
     }
@@ -76,14 +78,16 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
     }
 
     readChatState(chatState: ChatStateType) {
+        console.log('readChatState');
+        console.log(chatState);
         this.messageBodies = chatState.messageBodies ?? {};
         this.messageParentIds = chatState.messageParentIds ?? {};
     }
 
     writeChatState(): ChatStateType {
         return {
-            messageBodies: this.messageBodies,
-            messageParentIds: this.messageParentIds
+            messageBodies: this.messageBodies ?? {},
+            messageParentIds: this.messageParentIds ?? {}
         };
     }
 
