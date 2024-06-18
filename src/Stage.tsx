@@ -190,7 +190,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             console.log('textGen');
             let result: TextResponse|null = null;
             //while (!(result?.result) && retries > 0) {
-                result = await this.sendMessageAndAwait<TextResponse>("TEXT2TEXT", {
+                result = await sendMessageAndAwait<TextResponse>("TEXT2TEXT", {
                     prompt: monologuePrompt,
                     min_tokens: 50,
                     max_tokens: 200,
@@ -211,52 +211,60 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         }
     }
 
-    sendMessageAndAwait<ResponseType>(messageTypeSending: string,
-                                                      message: any,
-                                                      timeout: number = 600): Promise<ResponseType | null> {
-        return new Promise((resolve, _reject) => {
-            const uuid: string = v4();
-            message['uuid'] = uuid;
-            let responded = false;
-            const handleResponse = (event: any) => {
-                if (event.source === window.parent && ALLOWED_ORIGINS.has(event.origin)) {
-                    const { messageType, data } = event.data;
-                    console.log('Remove event listener:' + messageType);
-                    console.log(event.data);
-                    console.log(data);
-                    if (messageType != null && messageType == uuid) {
-                        event.stopPropagation();
-                        console.log('Actually remove');
-                        window.removeEventListener("message", handleResponse);
-                        responded = true;
-                        if (data != null && data.hasOwnProperty('error') && data.error != null) {
-                            console.error(`Error for ${messageTypeSending}, error: ${data.error}`);
-                            resolve(null);
-                        }
-                        resolve(data);
-                    }
-                }
-            };
-            console.log('Add event listener:' + messageTypeSending);
-            console.log(message);
-            window.addEventListener("message", handleResponse);
-            window.parent.postMessage({"messageType": messageTypeSending, "data": message}, '*');
 
-
-            setTimeout(() => {
-                console.log('Timed out');
-                window.removeEventListener("message", handleResponse);
-                if (!responded) {
-                    console.error(`Response timeout for ${messageTypeSending}`);
-                    resolve(null);
-                }
-            }, timeout * 1000);
-        });
-    }
 
     
     render(): ReactElement {
         return (<div></div>);
     }
 
+}
+
+async function sendMessageAndAwait<ResponseType>(messageTypeSending: string,
+                                                 message: any,
+                                                 timeout: number = 600): Promise<ResponseType | null> {
+    return new Promise((resolve, _reject) => {
+        const uuid: string = v4();
+        message['uuid'] = uuid;
+        let responded = false;
+        const handleResponse = (event: any) => {
+            if (event.source === window.parent && ALLOWED_ORIGINS.has(event.origin)) {
+                const { messageType, data } = event.data;
+                console.log('Remove event listener:' + messageType);
+                console.log(event.data);
+                console.log(data);
+                if (messageType != null && messageType == uuid) {
+                    console.log('Actually remove');
+                    window.removeEventListener("message", handleResponse);
+                    responded = true;
+                    if (data != null && data.hasOwnProperty('error') && data.error != null) {
+                        console.error(`Error for ${messageTypeSending}, error: ${data.error}`);
+                        resolve(null);
+                    }
+                    resolve(data);
+                }
+            }
+        };
+        console.log('Add event listener:' + messageTypeSending);
+        console.log(message);
+        window.addEventListener("message", handleResponse);
+        window.parent.postMessage({"messageType": messageTypeSending, "data": message}, '*');
+
+        try {
+            return Promise.race([
+                new Promise<ResponseType | null>((event) => setTimeout(() => {
+                    window.removeEventListener("message", handleResponse);
+                    console.log('Timed out');
+                    resolve(null);
+                }, timeout * 1000)),
+                new Promise<ResponseType | null>((event) => {
+                    console.log('handleResponse');
+                    handleResponse(event)
+                })
+            ]);
+        } catch (error) {
+            console.error(`Unexpected error for ${messageTypeSending}: ${error}`);
+            return null;
+        }
+    });
 }
