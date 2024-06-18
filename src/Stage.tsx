@@ -1,5 +1,5 @@
 import {ReactElement} from "react";
-import {StageBase, StageResponse, InitialData, Message} from "@chub-ai/stages-ts";
+import {StageBase, StageResponse, InitialData, Message, TextResponse} from "@chub-ai/stages-ts";
 import {LoadResponse} from "@chub-ai/stages-ts/dist/types/load";
 import {Character, User} from "@chub-ai/stages-ts";
 
@@ -104,7 +104,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         while(this.messageParentIds[currentId] && this.messageParentIds[currentId] != currentId && depth < 10) {
             currentId = this.messageParentIds[currentId];
             historyString = `${this.messageBodies[currentId] ?? ''}\n\n${historyString}`;
-            console.log(currentId + ":" + this.messageBodies[currentId]);
+            //console.log(currentId + ":" + this.messageBodies[currentId]);
             depth++;
         }
 
@@ -183,13 +183,17 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                 `${this.monologuePrompt}`;
 
             monologuePrompt = this.replaceTags(monologuePrompt, {"user": this.user.name, "char": promptedCharacter.name, "original": ''});
-
+            let retries = 3;
             console.log('generating:' + monologuePrompt);
-            let result = await this.generator.textGen({
-                prompt: 'Write a few sentences about being cool.',
-                min_tokens: 50,
-                max_tokens: 400
-            });
+            let result: TextResponse|null = null;
+            while (!(result?.result) && retries > 0) {
+                result = await this.generator.textGen({
+                    prompt: 'Write a few sentences about being cool.',
+                    min_tokens: 50,
+                    max_tokens: 400
+                });
+                retries--;
+            }
             if (result) {
                 console.log('result');
                 console.log(result);
