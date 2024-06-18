@@ -176,10 +176,10 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             const promptedCharacter = this.characters[characterId];
             const history = this.buildHistory(this.messageId);
             let monologuePrompt = `[INST]\n### Instruction:\n${promptedCharacter.system_prompt}\n` +
-                `About ${promptedCharacter.name}: ${promptedCharacter.description}\n${promptedCharacter.personality}\n` +
-                `Circumstances and context of the dialogue: ${promptedCharacter.scenario}\n` +
-                `About ${this.user.name}: ${this.user.chatProfile}\n` +
-                `[/INST]\n${history}\n${promptedCharacter.post_history_instructions}\n` +
+                //`About ${promptedCharacter.name}: ${promptedCharacter.description}\n${promptedCharacter.personality}\n` +
+                //`Circumstances and context of the dialogue: ${promptedCharacter.scenario}\n` +
+                //`About ${this.user.name}: ${this.user.chatProfile}\n` +
+                //`[/INST]\n${history}\n${promptedCharacter.post_history_instructions}\n` +
                 `${this.monologuePrompt}`;
 
             monologuePrompt = this.replaceTags(monologuePrompt, {"user": this.user.name, "char": promptedCharacter.name, "original": ''});
