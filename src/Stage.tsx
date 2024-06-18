@@ -135,7 +135,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         this.messageId = identity;
         this.messageBodies[identity] = `###Input: ${this.user.name}: ${content}`;
 
-        //await this.generateMonologue(promptForId ?? '');
+        await this.generateMonologue(promptForId ?? '');
 
         return {
             stageDirections: this.formatPrompt(promptForId),
@@ -159,7 +159,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         this.messageParentIds[identity] = this.messageId;
         this.messageId = identity;
         this.messageBodies[identity] = this.replaceTags(`###Response: {{char}}: ${content}`, {"user": this.user.name, "char": this.characters[anonymizedId].name});
-        await this.generateMonologue(anonymizedId ?? '');
+
         return {
             stageDirections: null,
             messageState: this.writeMessageState(),
@@ -174,8 +174,6 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         if (characterId && this.characters[characterId] && characterId != this.user.anonymizedId) {
             // Build monologue prompt:
             const promptedCharacter = this.characters[characterId];
-            console.log('first message:');
-            console.log(promptedCharacter.first_message);
             const history = this.buildHistory(this.messageId);
             let monologuePrompt = `[INST]\n### Instruction:\n${promptedCharacter.system_prompt}\n` +
                 `About ${promptedCharacter.name}: ${promptedCharacter.description}\n${promptedCharacter.personality}\n` +
@@ -190,9 +188,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             let result = await this.generator.textGen({
                 prompt: 'Write a few sentences about being cool.',
                 min_tokens: 50,
-                max_tokens: 400,
-                context_length: 2500,
-                stop: []
+                max_tokens: 400
             });
             if (result) {
                 console.log('result');
