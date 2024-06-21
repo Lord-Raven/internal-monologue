@@ -31,7 +31,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
 
     formatPrompt(characterId: string|null): string {
         return (!characterId || !this.monologues[characterId]) ? '' :
-            `[INST]These are ${this.characters[characterId].name}'s internal thoughts: ${this.monologues[characterId]}\nTacitly consider these thoughts when depicting this character's actions or dialog.[/INST]`;
+            `[INST]These are ${this.characters[characterId].name}'s internal thoughts:\n\n${this.monologues[characterId]}\n\nTacitly consider these thoughts when depicting this character's actions or dialog.[/INST]`;
     }
 
     constructor(data: InitialData<InitStateType, ChatStateType, MessageStateType, ConfigType>) {
@@ -179,8 +179,9 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                 `About ${promptedCharacter.name}: ${promptedCharacter.description}\n${promptedCharacter.personality}\n` +
                 `Circumstances and context of the dialogue: ${promptedCharacter.scenario}\n` +
                 `About ${this.user.name}: ${this.user.chatProfile}\n` +
-                `[/INST]\n${history}\n${promptedCharacter.post_history_instructions}\n` +
-                `${this.monologuePrompt}`;
+                `[/INST]\n${history}\n` +
+                `${this.monologuePrompt}\n` +
+                `${promptedCharacter.post_history_instructions}`;
 
             monologuePrompt = this.replaceTags(monologuePrompt, {"user": this.user.name, "char": promptedCharacter.name, "original": ''});
             //let retries = 3;
