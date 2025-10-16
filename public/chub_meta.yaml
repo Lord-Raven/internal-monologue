@@ -41,7 +41,7 @@ This allows users or botmakers to potentially use this stage for a variety of ot
 </p>
 <p>
 Maybe you want to request generated content that gets fully considered while generating the response—a purpose entirely removed from internal monologues. 
-Maybe you just want to modify the request prompt to remove the "tacit" instruction, so the response is free to describe the character's thoughts. 
+Maybe you just want to modify the request prompt to remove the \"tacit\" instruction, so the response is free to describe the character's thoughts. 
 </p>
 "
 
@@ -100,9 +100,6 @@ state_schema:
     type: object
   message:
     type: object
-    properties:
-      monologue:
-        type: string
   chat:
     type: object
 
