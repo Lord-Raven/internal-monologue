@@ -10,10 +10,10 @@ tagline: "Empower thoughtful bots—who keep those thoughts to themselves."
 creator_notes: "
 <p><h3>Purpose</h3>
 <p>
-This stage introduces a preliminary LLM call that generates thoughts that are then included in the ultimate response request.
+This simple stage introduces a preliminary LLM call that generates thoughts that are then included in the ultimate response request.
 </p>
 <p>
-By default, that preliminary call prompts the LLM to generate an internal monologue based on the character's perception of their situation, current goals, and possible next moves. 
+By default, that preliminary call prompts the LLM to generate internal thoughts based on the character's perception of their situation, current goals, and possible next moves. 
 These thoughts are fed into the response prompt with instruction to tacitly consider and act upon them if appropriate. 
 The goal of the default application is to give characters more adherence to their personalities and plans, so they make more thoughtful choices without _sharing_ those thoughts
 —which is great for characters with ulterior motives or secrets to maintain.
@@ -44,7 +44,7 @@ Maybe you just want to modify the request prompt to remove the \"tacit\" instruc
 "
 
 # 'PUBLIC', 'PRIVATE', or 'UNLISTED'.
-visibility: 'UNLISTED'
+visibility: 'PUBLIC'
 
 # 'ADJACENT' | 'NONE' | 'COVER' | 'FULLSCREEN'
 # 'ADJACENT' is default. The frame will display on the side of the
@@ -81,7 +81,7 @@ config_schema:
       title: Generation Prompt
       description: The prompt used to generate thought or other preliminary content.
       type: string
-      default: Deeply analyze and consider {{char}}'s description and recent events in this narrative, then output a couple brief sentences of {{char}}'s current, honest thoughts, shaped by personality, motives, other characters, and ongoing events. Describe their true opinions and the actions they are considering in this moment.
+      default: Deeply analyze and consider {{char}}'s description and recent events in this narrative, then output a couple brief sentences of {{char}}'s current, honest thoughts, shaped by their personality, motives, other characters, and ongoing events. Describe their true opinions and the actions they are considering in this moment before promptly ending this response.
     requestPrompt:
       title: Request Prompt
       description: The prompt used to include the preliminary content in the final response.
