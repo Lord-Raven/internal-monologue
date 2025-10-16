@@ -5,50 +5,45 @@
 project_name: "Internal Monologue"
 
 # A short tagline to show in search.
-tagline: "Empower thoughtful bots--who keep those thoughts to themselves."
+tagline: "Empower thoughtful bots—who keep those thoughts to themselves."
 
-creator_notes: "***Warning: This stage does not currently persist the user's pre- or post-history prompt to the LLM for its prompts;
-if you rely on a jailbreak in these settings, this stage will NOT honor it. As a result, please do not include this stage 
-directly on character cards at this time.***
+creator_notes: "
+<p><h3>**What Is This?**
+<p>
+This stage introduces a preliminary LLM call that generates thoughts that are then included in the ultimate response request.
+</p>
+<p>
+By default, that preliminary call prompts the LLM to generate an internal monologue based on the character's perception of their situation, current goals, and possible next moves. 
+These thoughts are fed into the response prompt with instruction to tacitly consider and act upon them if appropriate. 
+The goal of the default application is to give characters more adherence to their personalities and plans, so they make more thoughtful choices without _sharing_ those thoughts
+—which is great for characters with ulterior motives or secrets to maintain.
+</p>
 <br>
+<p><h3>**Usage**</h3></p>
 <br>
-That said, if you still want to use it with your jailbreak, you should be able to edit the character you're chatting with 
-and apply your jailbreak directly to them--those elements will be persisted to the LLM. Hopefully, I'll be able to address 
-this with the next wave of stage improvements.
+<p>
+Simply search for and add this stage to your chat from Chat Settings. If you are a botmaker, you can add the stage to your bot for all users from the bot's card page.
+</p>
+<p>
+The monologue is generated after each user input, which entails an additional call to the LLM. 
+Crucially, if you swipe, the same thoughts will be used, and if you edit your input, those changes will not trigger new thoughts. 
+You will need to submit a new input to generate different thoughts.
+</p>
+<p>
+If you don't mind spoilers—or just need to know what on Earth the bot was thinking—, every generated monologue is output to the browser's console.
+</p>
 <br>
+<p><h3>**Configuration**</h3></p>
 <br>
-**What It Does:**
-<br>
-This stage introduces a behind-the-scenes concept of internal character monologues. Before each response, 
-the stage submits an additional prompt to the LLM to gather the next character's personal thoughts on their situation,
-current goals, and possible next moves. These thoughts are then fed back into the character's response prompt with
-instruction to tacitly consider and act upon them where appropriate.
-<br>
-<br>
-The upshot is that characters should more consistently adhere to their personalities and plans, making more thoughtful
-choices without sharing those thoughts with the user--which is great if they have ulterior motives to maintain.
-<br>
-<br>
-**Usage Notes:**
-<br>
-The monologue is generated after each user input, which entails an additional call to the LLM. Generally, these
-calls are lighter than others, because only the last several chat messages are (currently) included. Because the monologue 
-is generated per-input, swipes may yield similar results, as the bot's thoughts are already established. Furthermore, if
-you edit your input, those changes will not be reflected in the monologue.
-<br>
-<br>
-If you don't mind spoilers--or just need to know what on Earth the bot was thinking--, every generated monologue is 
-output to the browser's console.
-<br>
-<br>
-The stage currently does some hacky things to construct chat history, and as a result, it will not be aware of events 
-that occurred prior to being added to a chat, so you may initially see wonky results when adding it in medias res. The 
-stage also has no awareness of character or lore books and if you swipe intros after adding the stage, it won't pick up
-on the correct intro for its own history tracking (but you can swipe intros and then add the stage).
-<br>
-<br>
-These shortcoming (and the post-history issue above) will 
-hopefully be resolvable when stages receive the planned prompt templating support."
+<p>
+The exact prompts used by the stage to generate thoughts and to include those thoughts in the response request are exposed through the stage's configuration. 
+This allows users or botmakers to potentially use this stage for a variety of other applications that involve a preliminary LLM call. 
+</p>
+<p>
+Maybe you want to request generated content that gets fully considered while generating the response—a purpose entirely removed from internal monologues. 
+Maybe you just want to modify the request prompt to remove the "tacit" instruction, so the response is free to describe the character's thoughts. 
+</p>
+"
 
 # 'PUBLIC', 'PRIVATE', or 'UNLISTED'.
 visibility: 'UNLISTED'
@@ -65,24 +60,36 @@ position: 'NONE'
 
 # Self-explanatory.
 tags:
-  - 'Extension'
-  - 'Enhancement'
-  - 'Add-On'
-  - 'Background'
+ - 'Stage'
+ - 'Add-On'
+ - 'Utility'
+ - 'Quality of Life'
+ - 'SFW'
 
 # The schema of any user-supplied config.
 # If your stage requires a configuration but has no
 #   defined schema, it won't work.
-# config_schema:
-#  title: Internal Monologue Settings
-#  type: object
-#  properties:
-#    perSwipeMode:
-#      title: Monologue Generation Point
-#      description: Determines whether the monologue is generated per user input (conserve requests and reduce per-swipe overhead) or per swipe (more dynamic swipe results).
-#      type: string
-#      default: Per Swipe
-#      enum: ["Per Input", "Per Swipe"]
+config_schema:
+  title: Internal Monologue Settings
+  type: object
+  properties:
+    #perSwipeMode:
+    #  title: Generation Point
+    #  description: Determines whether the content is generated per user input (conserve requests and reduce per-swipe overhead) or per swipe (more dynamic swipe results).
+    #  type: string
+    #  default: Per Input
+    #  enum: ["Per Input", "Per Swipe"]
+    generationPrompt:
+      title: Generation Prompt
+      description: The prompt used to generate thought or other preliminary content.
+      type: string
+      default: Deeply analyze and consider {{char}}'s description and recent events in this narrative, then output a couple brief sentences of {{char}}'s current, honest thoughts, shaped by personality, motives, other characters, and ongoing events. Describe their true opinions and the actions they are considering in this moment.
+    requestPrompt:
+      title: Request Prompt
+      description: The prompt used to include the preliminary content in the final response.
+      type: string
+      default: These are {{char}}'s internal thoughts:\n\n{{content}}\n\nTacitly consider these thoughts when depicting this character's actions or dialogue, if they are present in this scene.
+    
 
 # The schema of the state that you store.
 # This isn't needed even if you do store state,
