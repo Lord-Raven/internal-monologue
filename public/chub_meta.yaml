@@ -72,11 +72,11 @@ config_schema:
   title: Internal Monologue Settings
   type: object
   properties:
-    #perSwipeMode:
+    # perSwipeMode:
     #  title: Generation Point
-    #  description: Determines whether the content is generated per user input (conserve requests and reduce per-swipe overhead) or per swipe (more dynamic swipe results).
+    #  description: Determines whether the content is generated per user input (conserve requests and reduce per-swipe overhead) or per swipe (more dynamic swipe results, more consistent group chat behavior).
     #  type: string
-    #  default: Per Input
+    #  default: Per Swipe
     #  enum: ["Per Input", "Per Swipe"]
     generationPrompt:
       title: Generation Prompt

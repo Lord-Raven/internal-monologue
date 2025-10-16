@@ -24,7 +24,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
     users: {[key: string]: User};
     generationPrompt: string;
     requestPrompt: string;
-    //perSwipeMode: boolean;
+    perSwipeMode: boolean;
 
     constructor(data: InitialData<InitStateType, ChatStateType, MessageStateType, ConfigType>) {
 
@@ -41,7 +41,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         this.readMessageState(messageState);
         this.generationPrompt = config?.generationPrompt ?? this.DEFAULT_GENERATION_PROMPT;
         this.requestPrompt = config?.requestPrompt ?? this.DEFAULT_REQUEST_PROMPT;
-        //this.perSwipeMode = 'Per Input' !== config?.perSwipeMode;
+        this.perSwipeMode = false;//'Per Input' !== config?.perSwipeMode;
     }
 
     async load(): Promise<Partial<LoadResponse<InitStateType, ChatStateType, MessageStateType>>> {
@@ -76,25 +76,19 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
 
     async setState(messageState: MessageStateType): Promise<void> {
         console.log('setState');
+        console.log(messageState);
         this.readMessageState(messageState);
     }
 
-    async beforePrompt(userMessage: Message): Promise<Partial<StageResponse<ChatStateType, MessageStateType>>> {
-
-        const {
-            content,
-            promptForId,
-            anonymizedId
-        } = userMessage;
-
-        if (promptForId && this.characters[promptForId] && anonymizedId && this.users[anonymizedId]) {
+    async generateMonologue(characterId: string, userId: string, historyAddition: string) {
+        if (characterId && this.characters[characterId] && userId && this.users[userId]) {
             // Build monologue prompt:
-            const char = this.characters[promptForId];
-            const user = this.users[anonymizedId];
+            const char = this.characters[characterId];
+            const user = this.users[userId];
             let monologuePrompt = `{{system_prompt}}\n\n` +
                 `About {{char}}:\n${char.description} ${char.personality}\n\n` +
                 `About {{user}}:\n${user.chatProfile}\n\n` +
-                `Conversation history:\n{{messages}}\n{{user}}: ${content}\n\n` + // Include new message from user
+                `Conversation history:\n{{messages}}\n${historyAddition}\n` + // Potentially include new message from user
                 `Current Instruction:\n${this.generationPrompt}\n`
 
             console.log('Monologue prompt:\n' + monologuePrompt);
@@ -110,7 +104,23 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             } else {
                 console.log('No monologue result.');
             }
-            this.monologues[promptForId] = result ? result.result : '';
+            this.monologues[characterId] = result ? result.result : '';
+        }
+    }
+
+    async beforePrompt(userMessage: Message): Promise<Partial<StageResponse<ChatStateType, MessageStateType>>> {
+
+        const {
+            content,
+            promptForId,
+            anonymizedId
+        } = userMessage;
+
+        console.log('beforePrompt()');
+        console.log(userMessage);
+
+        if (!this.perSwipeMode) {
+            await this.generateMonologue(promptForId ?? '', anonymizedId, `{{user}}: ${content}\n`);
         }
 
         return {
