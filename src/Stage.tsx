@@ -82,11 +82,36 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
     async beforePrompt(userMessage: Message): Promise<Partial<StageResponse<ChatStateType, MessageStateType>>> {
 
         const {
+            content,
             promptForId,
             anonymizedId
         } = userMessage;
 
-        await this.generateMonologue(promptForId ?? '', anonymizedId ?? '');
+        if (promptForId && this.characters[promptForId] && anonymizedId && this.users[anonymizedId]) {
+            // Build monologue prompt:
+            const char = this.characters[promptForId];
+            const user = this.users[anonymizedId];
+            let monologuePrompt = `{{system_prompt}}\n\n` +
+                `About {{char}}:\n${char.description} ${char.personality}\n\n` +
+                `About {{user}}:\n${user.chatProfile}\n\n` +
+                `Conversation history:\n{{messages}}\n{{user}}: ${content}\n\n` + // Include new message from user
+                `Current Instruction:\n${this.generationPrompt}\n`
+
+            console.log('Monologue prompt:\n' + monologuePrompt);
+            let result: TextResponse|null = await this.generator.textGen({
+                prompt: monologuePrompt,
+                min_tokens: 50,
+                max_tokens: 150,
+                include_history: true
+            });
+            if (result) {
+                console.log('Monologue result:');
+                console.log(result.result);
+            } else {
+                console.log('No monologue result.');
+            }
+            this.monologues[promptForId] = result ? result.result : '';
+        }
 
         return {
             stageDirections: promptForId && this.characters[promptForId] && this.monologues[promptForId] ? 
@@ -109,39 +134,6 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             systemMessage: null,
             chatState: null
         };
-    }
-
-    async generateMonologue(characterId: string, userId: string) {
-        if (characterId && this.characters[characterId] && userId && this.users[userId]) {
-            // Build monologue prompt:
-            const char = this.characters[characterId];
-            const user = this.users[userId];
-            let monologuePrompt = `{{system_prompt}}\n\n` +
-                `About {{char}}:\n${char.description} ${char.personality}\n\n` +
-                `About {{user}}:\n${user.chatProfile}\n\n` +
-                `Conversation history:\n{{messages}}\n\n` +
-                `Current Instruction:\n${this.generationPrompt}\n`
-
-            //let retries = 3;
-            console.log('Monologue prompt:\n' + monologuePrompt);
-            let result: TextResponse|null = null;
-            //while (!(result?.result) && retries > 0) {
-                result = await this.generator.textGen({
-                    prompt: monologuePrompt,
-                    min_tokens: 50,
-                    max_tokens: 150,
-                    include_history: true
-                });
-            //    retries--;
-            //}
-            if (result) {
-                console.log('Monologue result:');
-                console.log(result);
-            } else {
-                console.log('No monologue result.');
-            }
-            this.monologues[characterId] = result ? result.result : '';
-        }
     }
 
     render(): ReactElement {
