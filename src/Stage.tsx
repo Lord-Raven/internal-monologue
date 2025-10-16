@@ -120,8 +120,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                 `About {{char}}:\n${char.description} ${char.personality}\n\n` +
                 `About {{user}}:\n${user.chatProfile}\n\n` +
                 `Conversation history:\n{{messages}}\n\n` +
-                `Current Instruction:\n${this.generationPrompt})}\n\n` +
-                `General Instruction:\n`;
+                `Current Instruction:\n${this.generationPrompt})}\n`
 
             //let retries = 3;
             console.log('Monologue prompt:\n' + monologuePrompt);
