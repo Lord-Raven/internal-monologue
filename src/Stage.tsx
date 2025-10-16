@@ -119,7 +119,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             let monologuePrompt = `{{system_prompt}}\n\n` +
                 `About {{char}}:\n${char.description} ${char.personality}\n\n` +
                 `About {{user}}:\n${user.chatProfile}\n\n` +
-                `Conversation history:\n{{history}}\n\n` +
+                `Conversation history:\n{{messages}}\n\n` +
                 `Current Instruction:\n${this.generationPrompt})}\n\n` +
                 `General Instruction:\n`;
 
