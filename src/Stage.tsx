@@ -13,7 +13,7 @@ type ChatStateType = any;
 
 export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateType, ConfigType> {
 
-    readonly DEFAULT_GENERATION_PROMPT = `Deeply analyze and consider {{char}}'s description and recent events in this narrative, then output a couple brief sentences of {{char}}'s current, honest thoughts, shaped by personality, motives, other characters, and ongoing events. Describe their true opinions and the actions they are considering in this moment.`
+    readonly DEFAULT_GENERATION_PROMPT = `Deeply analyze and consider {{char}}'s description and recent events in this narrative, then output a couple brief sentences of {{char}}'s current, honest thoughts, shaped by personality, motives, other characters, and ongoing events. Describe their true opinions and the actions they are considering in this moment before promptly ending this response.`
     readonly DEFAULT_REQUEST_PROMPT = `These are {{char}}'s internal thoughts:\n\n{{content}}\n\nTacitly consider these thoughts when depicting this character's actions or dialogue, if they are present in this scene.`;
 
     // messageState
