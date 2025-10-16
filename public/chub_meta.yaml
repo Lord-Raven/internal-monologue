@@ -8,7 +8,7 @@ project_name: "Internal Monologue"
 tagline: "Empower thoughtful bots—who keep those thoughts to themselves."
 
 creator_notes: "
-<p><h3>**What Is This?**
+<p><h3>Purpose</h3>
 <p>
 This stage introduces a preliminary LLM call that generates thoughts that are then included in the ultimate response request.
 </p>
@@ -19,8 +19,7 @@ The goal of the default application is to give characters more adherence to thei
 —which is great for characters with ulterior motives or secrets to maintain.
 </p>
 <br>
-<p><h3>**Usage**</h3></p>
-<br>
+<p><h3>Usage</h3></p>
 <p>
 Simply search for and add this stage to your chat from Chat Settings. If you are a botmaker, you can add the stage to your bot for all users from the bot's card page.
 </p>
@@ -33,8 +32,7 @@ You will need to submit a new input to generate different thoughts.
 If you don't mind spoilers—or just need to know what on Earth the bot was thinking—, every generated monologue is output to the browser's console.
 </p>
 <br>
-<p><h3>**Configuration**</h3></p>
-<br>
+<p><h3>Configuration</h3></p>
 <p>
 The exact prompts used by the stage to generate thoughts and to include those thoughts in the response request are exposed through the stage's configuration. 
 This allows users or botmakers to potentially use this stage for a variety of other applications that involve a preliminary LLM call. 
