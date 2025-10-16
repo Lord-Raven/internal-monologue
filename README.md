@@ -1,1 +1,1 @@
-This is a stage for simulating "thinking" by pre-prompting the LLM for some thoughts before a response is requested, feeding in those thoughts to help guide the ultimate response.
+This is a stage (extension) for chub.ai. It's purpose is to simulate "thinking" by pre-prompting the LLM for the character's perspective or prospective actions, aiming to guide the character's ultimate response in-chat.
