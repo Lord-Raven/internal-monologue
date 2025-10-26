@@ -80,12 +80,12 @@ config_schema:
       title: Generation Prompt
       description: The prompt used to generate thought or other preliminary content.
       type: string
-      default: A
+      default: Deeply analyze and consider {{char}}'s description and recent events in this narrative, then output a couple sentences summarizing {{char}}'s current, honest thoughts, shaped by their personality, motives, other characters, and ongoing events. Describe their true opinions and the actions they are considering in this moment before promptly ending this response.
     requestPrompt:
       title: Request Prompt
       description: The prompt used to include the preliminary content in the final response.
       type: string
-      default: "B"
+      default: This is a summary of {{char}}'s current internal thoughts:\n\n{{content}}\n\nIf {{char}} is present in this scene, be sure to implicitly weigh these thoughts and motives when depicting their actions or dialogue.
     generationMinTokens:
       title: Generation Minimum Tokens
       description: The min_tokens setting for the preliminary request.
