@@ -80,12 +80,12 @@ config_schema:
       title: Generation Prompt
       description: The prompt used to generate thought or other preliminary content.
       type: string
-      default: "Carefully consider {{char}}'s description and recent events..."
+      default: "Carefully consider {{char}}'s description and events..."
     requestPrompt:
       title: Request Prompt
       description: The prompt used to include the preliminary content in the final response.
       type: string
-      default: "A summary of {{char}}'s current thoughts: {{content}}..."
+      default: "{{char}}'s current thoughts: {{content}}..."
     generationMinTokens:
       title: Generation Minimum Tokens
       description: The min_tokens setting for the preliminary request.
