@@ -80,7 +80,7 @@ config_schema:
       title: Generation Prompt
       description: The prompt used to generate thought or other preliminary content.
       type: string
-      default: "Deeply analyze and consider {{char}}"
+      default: "Deeply analyze and consider {{char}}'s"
     requestPrompt:
       title: Request Prompt
       description: The prompt used to include the preliminary content in the final response.
