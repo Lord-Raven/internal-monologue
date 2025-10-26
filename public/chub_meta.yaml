@@ -76,24 +76,16 @@ config_schema:
   title: Internal Monologue Settings
   type: object
   properties:
-    #perSwipeMode:
-    #  title: Generation Point
-    #  description: Determines whether the content is generated per user input (conserve requests and reduce per-swipe overhead) or per swipe (more dynamic swipe results, more consistent group chat behavior).
-    #  type: string
-    #  default: Per Swipe
-    #  enum: ["Per Input", "Per Swipe"]
     generationPrompt:
       title: Generation Prompt
       description: The prompt used to generate thought or other preliminary content.
       type: string
-      default: >
-        ...
+      default: A
     requestPrompt:
       title: Request Prompt
       description: The prompt used to include the preliminary content in the final response.
       type: string
-      default: >
-        ...
+      default: "B"
     generationMinTokens:
       title: Generation Minimum Tokens
       description: The min_tokens setting for the preliminary request.
