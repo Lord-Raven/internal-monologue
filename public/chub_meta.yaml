@@ -86,12 +86,14 @@ config_schema:
       title: Generation Prompt
       description: The prompt used to generate thought or other preliminary content.
       type: string
-      default: "Deeply analyze and consider..."
+      default: >
+        Deeply analyze and consider...
     requestPrompt:
       title: Request Prompt
       description: The prompt used to include the preliminary content in the final response.
       type: string
-      default: "These are {{char}}'s internal thoughts:\n..."
+      default: >
+        These are {{char}}'s internal thoughts:\n...
     generationMinTokens:
       title: Generation Minimum Tokens
       description: The min_tokens setting for the preliminary request.
