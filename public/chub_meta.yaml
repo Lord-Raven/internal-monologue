@@ -97,12 +97,12 @@ config_schema:
     generationMinTokens:
       title: Generation Minimum Tokens
       description: The min_tokens setting for the preliminary request.
-      type: number
+      type: integer
       default: 30
     generationMaxTokens:
       title: Generation Maximum Tokens
       description: The max_tokens setting for the preliminary request.
-      type: number
+      type: integer
       default: 160
     
 
