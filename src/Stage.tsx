@@ -23,6 +23,8 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
     characters: {[key: string]: Character};
     users: {[key: string]: User};
     generationPrompt: string;
+    generationMinTokens: number;
+    generationMaxTokens: number;
     requestPrompt: string;
     perSwipeMode: boolean;
 
@@ -40,6 +42,8 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         this.monologues = {};
         this.readMessageState(messageState);
         this.generationPrompt = config?.generationPrompt ?? this.DEFAULT_GENERATION_PROMPT;
+        this.generationMinTokens = config?.generationMinTokens ?? 30;
+        this.generationMaxTokens = config?.generationMaxTokens ?? 150;
         this.requestPrompt = config?.requestPrompt ?? this.DEFAULT_REQUEST_PROMPT;
         this.perSwipeMode = false;//'Per Input' !== config?.perSwipeMode;
     }
@@ -93,8 +97,8 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             console.log('Monologue prompt:\n' + monologuePrompt);
             let result: TextResponse|null = await this.generator.textGen({
                 prompt: monologuePrompt,
-                min_tokens: 50,
-                max_tokens: 150,
+                min_tokens: this.generationMinTokens,
+                max_tokens: this.generationMaxTokens,
                 include_history: true
             });
             if (result) {

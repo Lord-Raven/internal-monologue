@@ -42,6 +42,10 @@ Maybe you want to request generated content that gets fully considered while gen
 Maybe you just want to modify the request prompt to remove the \"tacit\" instruction, so the response is free to describe the character's thoughts. 
 There are probably a lot of simple uses for this stage. For more complex behaviors in this vein, consider <a href=\"https://chub.ai/extensions/Ravenok/statosphere-3704059fdd7e\">Statosphere</a>.
 </p>
+<br>
+<p><h3>Updates</h3></p>
+<p>2025.10.26 - Exposed min and max token settings through configuration, so users can generate larger preliminary content with this stage.
+</p>
 "
 
 # 'PUBLIC', 'PRIVATE', or 'UNLISTED'.
@@ -88,6 +92,16 @@ config_schema:
       description: The prompt used to include the preliminary content in the final response.
       type: string
       default: These are {{char}}'s internal thoughts:\n\n{{content}}\n\nTacitly consider these thoughts when depicting this character's actions or dialogue, if they are present in this scene.
+    generationMinTokens:
+      title: Generation Minimum Tokens
+      description: The min_tokens setting for the preliminary request.
+      type: number
+      default: 30
+    generationMaxTokens:
+      title: Generation Maximum Tokens
+      description: The max_tokens setting for the preliminary request.
+      type: number
+      default: 150
     
 
 # The schema of the state that you store.
