@@ -44,8 +44,8 @@ There are probably a lot of simple uses for this stage. For more complex behavio
 </p>
 <br>
 <p><h3>Updates</h3></p>
-<p>2025.10.26 - Exposed min and max token settings through configuration, so users can generate larger preliminary content with this stage.
-</p>
+<p>2025.11.04 - Added a stopping string to the prompt and default instruction: #END. This should help the default behavior avoid narrating after completing the original instruction.
+<p>2025.10.26 - Exposed min and max token settings through configuration, so users can generate larger preliminary content with this stage.</p>
 "
 
 # 'PUBLIC', 'PRIVATE', or 'UNLISTED'.
@@ -80,7 +80,7 @@ config_schema:
       title: Generation Prompt
       description: The prompt used to generate thought or other preliminary content.
       type: string
-      default: "Deeply analyze and consider {{char}}'s description and recent events in this narrative, then output a couple sentences summarizing {{char}}'s current, honest thoughts, shaped by their personality, motives, other characters, and ongoing events; describe their true opinions and the actions they are considering in this moment before promptly ending this response"
+      default: "Deeply analyze and consider {{char}}'s description and recent events in this narrative, then output a couple sentences summarizing {{char}}'s current, honest thoughts, shaped by their personality, motives, other characters, and ongoing events; describe their true opinions and the actions they are considering in this moment before promptly ending these thoughts with #END"
     requestPrompt:
       title: Request Prompt
       description: The prompt used to include the preliminary content in the final response.

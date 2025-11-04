@@ -13,7 +13,7 @@ type ChatStateType = any;
 
 export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateType, ConfigType> {
 
-    readonly DEFAULT_GENERATION_PROMPT = `Deeply analyze and consider {{char}}'s description and recent events in this narrative, then output a couple sentences summarizing {{char}}'s current, honest thoughts, shaped by their personality, motives, other characters, and ongoing events. Describe their true opinions and the actions they are considering in this moment before promptly ending this response.`
+    readonly DEFAULT_GENERATION_PROMPT = `Deeply analyze and consider {{char}}'s description and recent events in this narrative, then output a couple sentences summarizing {{char}}'s current, honest thoughts, shaped by their personality, motives, other characters, and ongoing events. Describe their true opinions and the actions they are considering in this moment before ending these thoughts with #END.`
     readonly DEFAULT_REQUEST_PROMPT = `This is a summary of {{char}}'s current internal thoughts:\n\n{{content}}\n\nIf {{char}} is present in this scene, be sure to implicitly weigh these thoughts and motives when depicting their actions or dialogue.`;
 
     // messageState
@@ -99,7 +99,8 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                 prompt: monologuePrompt,
                 min_tokens: this.generationMinTokens,
                 max_tokens: this.generationMaxTokens,
-                include_history: true
+                include_history: true,
+                stop: ['#END']
             });
             if (result) {
                 console.log('Monologue result:');
@@ -107,7 +108,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             } else {
                 console.log('No monologue result.');
             }
-            this.monologues[characterId] = result ? result.result : '';
+            this.monologues[characterId] = result?.result?.trim() || '';
         }
     }
 
