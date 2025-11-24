@@ -44,7 +44,8 @@ There are probably a lot of simple uses for this stage. For more complex behavio
 </p>
 <br>
 <p><h3>Updates</h3></p>
-<p>2025.11.04 - Added a stopping string to the prompt and default instruction: #END. This should help the default behavior avoid narrating after completing the original instruction.
+<p>2025.11.23 - Fixed a bug where the character name tag was not being properly replaced in multi-character scenarios. The generation and request prompts have been updated to use {{char}} instead of a static tag.</p>
+<p>2025.11.04 - Added a stopping string to the prompt and default instruction: #END. This should help the default behavior avoid narrating after completing the original instruction.</p>
 <p>2025.10.26 - Exposed min and max token settings through configuration, so users can generate larger preliminary content with this stage.</p>
 "
 
