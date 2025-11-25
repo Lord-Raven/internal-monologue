@@ -88,12 +88,11 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             // Build monologue prompt:
             const char = this.characters[characterId];
             const user = this.users[userId];
-            this.generationPrompt = this.replaceTags(this.generationPrompt, {'char': char.name})
             let monologuePrompt = `{{system_prompt}}\n\n` +
                 `About ${char.name}:\n${char.description} ${char.personality}\n\n` +
                 `About {{user}}:\n${user.chatProfile}\n\n` +
                 `Conversation history:\n{{messages}}\n${historyAddition}\n` + // Potentially include new message from user
-                `Current Instruction:\n${this.generationPrompt}\n`
+                `Current Instruction:\n${this.replaceTags(this.generationPrompt, {'char': char.name})}\n`
 
             console.log('Monologue prompt:\n' + monologuePrompt);
             let result: TextResponse|null = await this.generator.textGen({
